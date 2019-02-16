@@ -1,19 +1,10 @@
-The code and data used to write my blog post "Predicting the Number of Likes on a Facebook Status With Statistical Keyword Analysis" at http://minimaxir.com/2013/06/big-social-data/
-
 An explanation of the derivation of the analysis is below.
 
-----------
-
-
-Before any analysis, it's helpful to validate the data. What is the distribution of the number of Likes on a status? How many statuses have low numbers of likes? How many statuses have gone viral and have an absurdly large number of likes? After removing a few obvious outliers (such as CNN's [status urging fans to vote in the 2012 election](http://www.facebook.com/5550296508/posts/266768910110901) with *314,774* Likes), I've created a histogram of the data:
-
-![](http://minimaxir.com/img/cnn_Likes_Histogram.png)
-
+Before any analysis, it's helpful to validate the data. What is the distribution of the number of Likes on a status? How many statuses have low numbers of likes? How many statuses have gone viral and have an absurdly large number of likes? After removing a few obvious outliers (such as CNN's [status urging fans to vote in the 2012 election](http://www.facebook.com/5550296508/posts/266768910110901) with *314,774* Likes)
 The data is *very* right-skewed, with most of the data points centered around 1,000 Likes. This behavior isn't surprising; news posts don't go viral every time they're posted, but it could be helpful in the analysis.
 
 The keywords, which for this analysis are *any words containing a capital letter*, are extracted from the post Messages for each Status update and are subsequently tallied. Keywords which appear on atleast 30 different status updates are significant enough to provide useful data for analysis. For CNN, these 93 keywords are:
 
-![](http://minimaxir.com/img/cnn_Frequent.png)
 
 CNN certainly posts about a variety of subjects.
 
@@ -65,7 +56,7 @@ We now have the secret to using keywords, right? Unfortunately, we're not done.
 
 How *accurately* does this model of using keywords predict the number of Likes received? Here's the residual plot of the actual number of Likes for a given status minus the predicted number of likes by the model.
 
-![](http://minimaxir.com/img/cnn_Residual_Plot.png)
+
 
 The good news is that there's no pattern amount the residuals, and that the majority are centered around 0 (Actual = Predicted). Unfortunately, the variance in the residuals is extremely high, from -4000 to 15000, which indicates that the model alone may not be robust enough to predict the number of Likes.
 
@@ -75,9 +66,9 @@ We might not be able to determine the *exact* number of Likes predicted by a var
 
 We can improve the model by removing redundant and potentially harmful keyword variables, especially since we only chose the most frequently occurring keywords. We don't need *both* "BREAKING" and "NEWS" since they almost always appear together in the same status. The R programming language has a built-in brute-force optimizer that removes variables from a regression until removing variables stops improving the model.
 
-Running the optimizer reduces the number of keywords in the model from 93 to *26*. Out of those 26, we can only consider the variables which are statistically significant at the 95% confidence level (i.e. we have a less than 5% chance of failing to reject the hypothesis that the keyword variable has no effect on the regression). Therefore, here are the final influential keywords for CNN:
+Running the optimizer reduces the number of keywords in the model from 93 to *26*. Out of those 26, we can only consider the variables which are statistically significant at the 95% confidence level (i.e. we have a less than 5% chance of failing to reject the hypothesis that the keyword variable has no effect on the regression). 
 
-![](http://minimaxir.com/img/cnn_Wordcloud.png)
+
 
     				+Likes			Pr(>|t|)
     Bourdain		1962.98			0
